@@ -15,16 +15,16 @@ def createTeam():
     # filePath = input("Enter the file path ")
     inputFileData = readJsonFile('C:/Users/satvik.ms/Desktop/final project diagrams/TeamsInputJSON.json')
     Game.gameType = inputFileData['gameType']
-    playersDetails = inputFileData['players']
+    Game.players = inputFileData['players']
     noOfMembers = 0
     if (Game.gameType == 1):
-        TeamList.total = int(len(playersDetails)/11)
+        TeamList.total = int(len(Game.players)/11)
         noOfMembers = 11
     elif (Game.gameType == 2):
-        TeamList.total = int(len(playersDetails)/2)
+        TeamList.total = int(len(Game.players)/2)
         noOfMembers = 2
     else:
-        TeamList.total = int(len(playersDetails))
+        TeamList.total = int(len(Game.players))
         noOfMembers = 1
     playersList = []
     for i in range(TeamList.total):
@@ -32,10 +32,10 @@ def createTeam():
             "id": i + 1,
             "name": "Team - " + str(i),
             "gameType": Game.gameType,
-            "players": playersDetails[0: noOfMembers]
+            "players": Game.players[0: noOfMembers]
         }
         playersList.append(data)
-        del playersDetails[0: noOfMembers]
+        del Game.players[0: noOfMembers]
     TeamList.items = playersList
     teamData = {}
     teamData["teams"] = TeamList.items
