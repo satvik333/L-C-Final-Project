@@ -1,6 +1,9 @@
 import json
 from Game import Game
 from TeamList import TeamList
+import pyodbc
+connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=ITT-SATVIK-MS;DATABASE=ISCdatabase;Trusted_Connection=yes;')
+cursor=connection.cursor()
 
 def readJsonFile(filePath):
     try:
@@ -10,10 +13,17 @@ def readJsonFile(filePath):
     except:
         print('Error while reading a file')
 
+def saveTeams(teams):
+    for team in teams:
+        cursor.execute("INSERT INTO Team(teamId, name, eventId, gameId) values (?, ?, ?, ?)", team['id'], team['name'], 5, team["gameType"])
+
+def getTeams(gameId):
+    print(cursor.execute("select * from Team"))
+
 
 def createTeam():
     # filePath = input("Enter the file path ")
-    inputFileData = readJsonFile('C:/Users/satvik.ms/Desktop/final project diagrams/TeamsInputJSON.json')
+    inputFileData = readJsonFile('C:/Users/satvik.ms/Desktop/L-C-Final-Project/TeamsInputJSON.json')
     Game.gameType = inputFileData['gameType']
     Game.players = inputFileData['players']
     noOfMembers = 0
@@ -40,9 +50,10 @@ def createTeam():
     teamData = {}
     teamData["teams"] = TeamList.items
     teamData["total"] = TeamList.total
+    # saveTeams(teamData["teams"])
     return json.dumps(teamData)
     
-createdTeamDetails = createTeam()
-print(createdTeamDetails)
+createTeam()
+getTeams(1)
 
 
