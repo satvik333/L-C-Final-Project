@@ -2,6 +2,8 @@ import json
 from Event import Event
 from FixtureList import FixtureList
 from Ocassion import Occasion
+import datetime
+
 
 def readJsonFile(filePath):
     try:
@@ -11,10 +13,41 @@ def readJsonFile(filePath):
     except:
         print('Error while reading a file')
 
-def createFixtures(teamList, holidayList, event):
-    print('11111111', teamList)
-    print('22222222222', holidayList)
-    print('333333333', event)
+def createFixturesForBadminton(teamsDetails):
+    pass
 
-inputFileData = readJsonFile('C:/Users/satvik.ms/Desktop/final project diagrams/TeamsInputJSON.json')
-print('????????', inputFileData)
+def createFixturesForCricket(teamsDetails):
+    pass
+
+def createFixturesForChess(teamsDetails):
+    pass
+
+def createFixtures(teamList, holidayList, event):
+    teamsDetails = teamList["teams"]
+    fixtureDetails = {}
+    fixtureDetails["gameId"] = 1
+    fixtureDetails["matches"] = []
+    teamNames = []
+    for team in teamsDetails:
+        teamNames.append(team["name"])
+    matchDetails = {}
+    allMatchDetails = []
+    for i in range(int(len(teamNames)/2)):
+        matchDetails["date"] = datetime.datetime.now()
+        matchDetails["teams"] = []
+        teamOne = teamNames[0]
+        teamTwo = teamNames[1]
+        matchDetails["teams"].append(teamOne)
+        matchDetails["teams"].append(teamTwo)
+        del teamNames[0: 2]
+        allMatchDetails.append(matchDetails)
+    fixtureDetails["matches"].append(allMatchDetails)
+    print(fixtureDetails)
+    return fixtureDetails
+
+inputFileData = readJsonFile('C:/Users/satvik.ms/Desktop/final project diagrams/FixtureInputJSON.json')
+
+teamList = inputFileData["listOfTeams"]
+holidayList = inputFileData["holidayList"]
+event = inputFileData["event"]
+createFixtures(teamList, holidayList, event)
