@@ -15,10 +15,18 @@ def readJsonFile(filePath):
 
 def saveTeams(teams):
     for team in teams:
-        cursor.execute("INSERT INTO Team(teamId, name, eventId, gameId) values (?, ?, ?, ?)", team['id'], team['name'], 5, team["gameType"])
+        cursor.execute("INSERT INTO Team(teamId, name, eventId, gameId) values (?, ?, ?, ?)", team['id'], team['name'], 1, team["gameType"])
+        players = team['players']
+        for player in players:
+            cursor.execute("INSERT INTO Player(playerId,playerName) values (?, ?)", player['playerId'], player['name'])
+            cursor.execute("INSERT INTO Team_Player(playerId, teamId) values (?, ?)", player['playerId'], team['id'])
+        cursor.commit()
+
 
 def getTeams(gameId):
-    print(cursor.execute("select * from Team"))
+    cursor.execute("select * from Team, Player, Team_Player where Team.teamId = Team_Player.teamId AND Team_Player.playerId = player.playerId AND gameId = {}".format(gameId))
+    result = cursor.fetchall()
+    return result
 
 
 def createTeam():
@@ -50,10 +58,10 @@ def createTeam():
     teamData = {}
     teamData["teams"] = TeamList.items
     teamData["total"] = TeamList.total
-    # saveTeams(teamData["teams"])
+    saveTeams(teamData["teams"])
     return json.dumps(teamData)
     
 createTeam()
-getTeams(1)
+getTeams(2)
 
 
