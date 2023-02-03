@@ -36,7 +36,7 @@ def createTeam():
     teamData["teams"] = TeamList.items
     teamData["total"] = TeamList.total
     return teamData
-    
+
 
 print(createTeam())
 
