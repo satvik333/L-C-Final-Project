@@ -46,8 +46,12 @@
 	},
 	"holidayList": [
 		{
-			"name": "Holiday Name",
+			"name": "Holly",
 			"date": "03-08-2023"
+		},
+		{
+			"name": "Christmas",
+			"date": "06-08-2023"
 		}
 	],
 	"event": {
