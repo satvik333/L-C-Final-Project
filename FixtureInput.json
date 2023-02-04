@@ -2,8 +2,8 @@
 	"listOfTeams": {
 		"teams": [
 			{
-				"name": "Team - A",
-				"gameType": 1,
+				"name": "Team0",
+				"gameType": 2,
 				"players": [
 					{
 						"id": 1,
@@ -12,8 +12,8 @@
 				]
 			},
 			{
-				"name": "Team - B",
-				"gameType": 1,
+				"name": "Team1",
+				"gameType": 2,
 				"players": [
 					{
 						"id": 2,
@@ -22,8 +22,8 @@
 				]
 			},
 			{
-				"name": "Team - C",
-				"gameType": 1,
+				"name": "Team2",
+				"gameType": 2,
 				"players": [
 					{
 						"id": 3,
@@ -32,8 +32,8 @@
 				]
 			},
 			{
-				"name": "Team - D",
-				"gameType": 1,
+				"name": "Team3",
+				"gameType": 2,
 				"players": [
 					{
 						"id": 4,
@@ -47,11 +47,11 @@
 	"holidayList": [
 		{
 			"name": "Holly",
-			"date": "03-08-2023"
+			"date": "05-01-2023"
 		},
 		{
 			"name": "Christmas",
-			"date": "06-08-2023"
+			"date": "15-01-2023"
 		}
 	],
 	"event": {
