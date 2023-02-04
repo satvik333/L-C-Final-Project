@@ -1,5 +1,5 @@
 import socket
-from .createTeam import createTeam
+from CreateTeam import createteam
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -11,8 +11,6 @@ server_socket.listen(1)
 while True:
     client_connection, client_address = server_socket.accept()
     data = client_connection.recv(1024)
-
-    response = createTeam(data)
+    response = createteam.createTeam(data)
     client_connection.sendall(response)
-
     client_connection.close()
