@@ -84,6 +84,8 @@ class createfixtures:
             teams = teamList["teams"]
             gameType = ''
             matches = []
+            if (len(teams) % 2 != 0):
+                return ("Cannot create fixtures with odd number of teams")
             for i in range(0, len(teams), 2):
                 gameType = teams[i]['gameType']
                 duration = 0
