@@ -1,0 +1,62 @@
+{
+	"listOfTeams": {
+		"teams": [
+			{
+				"name": "Team0",
+				"gameType": 2,
+				"players": [
+					{
+						"id": 1,
+						"name": "A"
+					}
+				]
+			},
+			{
+				"name": "Team1",
+				"gameType": 2,
+				"players": [
+					{
+						"id": 2,
+						"name": "B"
+					}
+				]
+			},
+			{
+				"name": "Team2",
+				"gameType": 2,
+				"players": [
+					{
+						"id": 3,
+						"name": "C"
+					}
+				]
+			},
+			{
+				"name": "Team3",
+				"gameType": 2,
+				"players": [
+					{
+						"id": 4,
+						"name": "D"
+					}
+				]
+			}
+		],
+		"total": 4
+	},
+	"holidayList": [
+		{
+			"name": "Holly",
+			"date": "05-01-2023"
+		},
+		{
+			"name": "Christmas",
+			"date": "15-01-2023"
+		}
+	],
+	"event": {
+		"name": "InTimeTec Sports Carnival",
+		"startDate": "03-01-2023",
+		"endDate": "03-02-2023"
+	}
+}
