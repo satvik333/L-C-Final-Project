@@ -11,6 +11,20 @@ connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=ITT-S
 cursor = connection.cursor()
 
 class fixturedate:
+    def generateRandomTime():
+        try:
+            start_time = datetime.datetime.strptime("09:00:00", "%H:%M:%S").time()
+            end_time = datetime.datetime.strptime("17:00:00", "%H:%M:%S").time()
+            start_datetime = datetime.datetime.combine(datetime.datetime.today(), start_time)
+            end_datetime = datetime.datetime.combine(datetime.datetime.today(), end_time)
+            delta1 = end_datetime - start_datetime
+            random_seconds = random.randint(0, int(delta1.total_seconds()))
+            random_datetime = start_datetime + datetime.timedelta(seconds=random_seconds)
+            return random_datetime.time()
+        except Exception as e:
+            print('Error while generating time', e)
+
+
     def generateDate(Event, holidayist):
         try:
             holidays = []
@@ -30,18 +44,12 @@ class fixturedate:
                 if scheduledDate not in holidays:
                     return scheduledDate
                 scheduledDate += scheduledDate(days=1)
+            
+            random_time = fixturedate.generateRandomTime()
 
-            start_time = datetime.datetime.strptime("09:00:00", "%H:%M:%S").time()
-            end_time = datetime.datetime.strptime("17:00:00", "%H:%M:%S").time()
-            start_datetime = datetime.datetime.combine(datetime.datetime.today(), start_time)
-            end_datetime = datetime.datetime.combine(datetime.datetime.today(), end_time)
-            delta1 = end_datetime - start_datetime
-            random_seconds = random.randint(0, int(delta1.total_seconds()))
-            random_datetime = start_datetime + datetime.timedelta(seconds=random_seconds)
-            random_time = random_datetime.time()
             return scheduledDate + ' ' + str(random_time)
         except Exception as e:
-            print('Error while saving fixtures', e)
+            print('Error while generating date', e)
 
 class savefixture:
     def saveFixtures(matches):
