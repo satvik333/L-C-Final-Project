@@ -72,7 +72,7 @@ class createteam:
             teamData = {}
             teamData["teams"] = TeamList.items
             teamData["total"] = TeamList.total
-            saveteam.saveTeams(teamData["teams"])
+            # saveteam.saveTeams(teamData["teams"])
             return json.dumps(teamData)
         except Exception as e:
             print('Error while creating team', e)
