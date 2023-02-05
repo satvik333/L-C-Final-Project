@@ -8,6 +8,7 @@ client_socket.connect(server_address)
 
 with open("C:/Users/satvik.ms/Desktop/L-C-Final-Project/TeamsInputJSON.json", "r") as f:
     data = json.load(f)
+
 message = json.dumps(data).encode()
 client_socket.sendall(message)
 
