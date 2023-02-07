@@ -33,6 +33,7 @@ class getteam:
         try:
             cursor.execute("select * from Team, Player, Team_Player where Team.teamId = Team_Player.teamId AND Team_Player.playerId = player.playerId AND gameId = {}".format(gameId))
             result = cursor.fetchall()
+            print("Team are",result)
             return result
         except Exception as e:
             print('Error while retriving data', e)
@@ -62,7 +63,7 @@ class createteam:
             for i in range(TeamList.total):
                 data = {
                     "id": i + 1,
-                    "name": "Team - " + str(i),
+                    "name": "Team" + str(i),
                     "gameType": Game.gameType,
                     "players": Game.players[0: noOfMembers]
                 }
@@ -72,6 +73,7 @@ class createteam:
             teamData = {}
             teamData["teams"] = TeamList.items
             teamData["total"] = TeamList.total
+            print("Created Teams are",teamData["teams"])
             saveteam.saveTeams(teamData["teams"])
             return json.dumps(teamData)
         except Exception as e:
