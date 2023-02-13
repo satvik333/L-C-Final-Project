@@ -25,26 +25,27 @@ class fixturedate:
             print('Error while generating time', e)
 
 
+    def isScheduledDateInHolidays(scheduledDate, holidays):
+        return scheduledDate in holidays
+
+    def generateScheduledDate(eventStartDate, eventEndDate, holidays):
+        delta = eventEndDate - eventStartDate
+        random_days = random.randint(0, delta.days)
+        random_date = eventStartDate + datetime.timedelta(days=random_days)
+        scheduledDate = random_date.strftime('%d-%m-%Y')
+        maxDate = random_date.strftime('%Y-%m-%d')
+
+        while fixturedate.isScheduledDateInHolidays(scheduledDate, holidays):
+            scheduledDate = (datetime.datetime.strptime(scheduledDate, '%d-%m-%Y') + datetime.timedelta(days=1)).strftime('%d-%m-%Y')
+
+        return scheduledDate
+
     def generateDate(Event, holidayist):
         try:
-            holidays = []
-            for i in holidayist:
-                holidays.append(i['date'])
+            holidays = [i['date'] for i in holidayist]
             eventStartDate = datetime.datetime.strptime(Event["startDate"], '%d-%m-%Y').date()
             eventEndDate = datetime.datetime.strptime(Event["endDate"], '%d-%m-%Y').date()
-            start_date = datetime.date(int(eventStartDate.strftime('%Y')), int(eventStartDate.strftime('%m')), int(eventStartDate.strftime('%d')))
-            end_date = datetime.date(int(eventEndDate.strftime('%Y')), int(eventEndDate.strftime('%m')), int(eventEndDate.strftime('%d')))
-            delta = end_date - start_date
-            random_days = random.randint(0, delta.days)
-            random_date = start_date + datetime.timedelta(days=random_days)
-            scheduledDate = random_date.strftime('%d-%m-%Y')
-            maxDate = random_date.strftime('%Y-%m-%d')
-
-            while scheduledDate <= maxDate:
-                if scheduledDate not in holidays:
-                    return scheduledDate
-                scheduledDate += scheduledDate(days=1)
-            
+            scheduledDate = fixturedate.generateScheduledDate(eventStartDate, eventEndDate, holidays)
             random_time = fixturedate.generateRandomTime()
 
             return scheduledDate + ' ' + str(random_time)
@@ -78,33 +79,39 @@ class readjson:
         except Exception as e:
             print('Error while reading a file', e)
 
+
+class FixtureList:
+    matches = []
+
+def generate_match(teams, i, holidayList, Event, gameType):
+    duration = 0
+    if (gameType == 2 or gameType == 3):
+        duration = 30
+    else:
+        duration = 180
+    return {
+        "date": fixturedate.generateDate(Event, holidayList),
+        "teams": [teams[i]["name"], teams[i + 1]["name"]],
+        "duration": duration
+    }
 class createfixtures:
-    def createFixtures(teamList, holidayList, Event):
+    def create_fixtures(teamList, holidayList, Event):
         try:
             teams = teamList["teams"]
-            gameType = ''
-            matches = []
             if (len(teams) % 2 != 0):
-                return ("Cannot create fixtures with odd number of teams")
-            for i in range(0, len(teams), 2):
-                gameType = teams[i]['gameType']
-                duration = 0
-                if (gameType == 2 or gameType == 3):
-                    duration = 30
-                else:
-                    duration = 180
-                match = {
-                    "date": fixturedate.generateDate(Event, holidayList),
-                    "teams": [teams[i]["name"], teams[i + 1]["name"]],
-                    "duration": duration
-                }
-                matches.append(match)
+                return "Cannot create fixtures with odd number of teams"
+
+            gameType = teams[0]['gameType']
+            matches = [generate_match(teams, i, holidayList, Event, gameType) for i in range(0, len(teams), 2)]
+
+            FixtureList.matches = matches
+            # savefixture.saveFixtures(FixtureList.matches)
+
             output_data = {
                 "gameId": gameType,
                 "matches": matches,
             }
-            FixtureList.matches = output_data["matches"]
-            savefixture.saveFixtures(FixtureList.matches)
+            print(output_data)
             return json.dumps(output_data)
         except Exception as e:
             print('Error while creating fixture', e)
@@ -114,4 +121,4 @@ inputFileData = readjson.readJsonFile('C:/Users/satvik.ms/Desktop/L-C-Final-Proj
 teamList = inputFileData["listOfTeams"]
 holidayList = inputFileData["holidayList"]
 Event = inputFileData["event"]
-createfixtures.createFixtures(teamList, holidayList, Event)
+createfixtures.create_fixtures(teamList, holidayList, Event)
