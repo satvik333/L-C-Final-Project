@@ -29,16 +29,19 @@ class fixturedate:
         return scheduledDate in holidays
 
     def generateScheduledDate(eventStartDate, eventEndDate, holidays):
-        delta = eventEndDate - eventStartDate
-        random_days = random.randint(0, delta.days)
-        random_date = eventStartDate + datetime.timedelta(days=random_days)
-        scheduledDate = random_date.strftime('%d-%m-%Y')
-        maxDate = random_date.strftime('%Y-%m-%d')
+        try:
+            delta = eventEndDate - eventStartDate
+            random_days = random.randint(0, delta.days)
+            random_date = eventStartDate + datetime.timedelta(days=random_days)
+            scheduledDate = random_date.strftime('%d-%m-%Y')
+            maxDate = random_date.strftime('%Y-%m-%d')
 
-        while fixturedate.isScheduledDateInHolidays(scheduledDate, holidays):
-            scheduledDate = (datetime.datetime.strptime(scheduledDate, '%d-%m-%Y') + datetime.timedelta(days=1)).strftime('%d-%m-%Y')
+            while fixturedate.isScheduledDateInHolidays(scheduledDate, holidays):
+                scheduledDate = (datetime.datetime.strptime(scheduledDate, '%d-%m-%Y') + datetime.timedelta(days=1)).strftime('%d-%m-%Y')
 
-        return scheduledDate
+            return scheduledDate
+        except Exception as e:
+            print('Error while generating scheduled date', e)
 
     def generateDate(Event, holidayist):
         try:
@@ -53,20 +56,27 @@ class fixturedate:
             print('Error while generating date', e)
 
 class savefixture:
-    def saveFixtures(matches):
+    def get_team_ids(teams, cursor):
+        cursor.execute("SELECT * FROM Team WHERE Team.name IN ('{}')".format("', '".join(teams)))
+        rst = cursor.fetchall()
+        team_ids = []
+        for team in rst:
+            team_ids.append(team[0])
+        return team_ids
+
+    def save_match(match, cursor):
+        teams = match['teams']
+        team_ids = savefixture.get_team_ids(teams, cursor)
+        date_string = match['date']
+        date_object = datetime.datetime.strptime(date_string, "%d-%m-%Y %H:%M:%S")
+        date_string_sql = date_object.strftime("%Y-%m-%d %H:%M:%S")
+        cursor.execute("INSERT INTO Matches(date, firstTeamId, secondTeamId, duration) values (?, ?, ?, ?)", date_string_sql,team_ids[0],team_ids[1],match['duration'] )
+        cursor.commit()
+
+    def save_fixtures(matches, cursor):
         try:
             for match in matches:
-                teams = match['teams']
-                cursor.execute("SELECT * FROM Team WHERE Team.name IN ('{}')".format("', '".join(teams)))
-                rst = cursor.fetchall()
-                teamIds = []
-                for team in rst:
-                    teamIds.append(team[0])
-                date_string = match['date']
-                date_object = datetime.datetime.strptime(date_string, "%d-%m-%Y %H:%M:%S")
-                date_string_sql = date_object.strftime("%Y-%m-%d %H:%M:%S")
-                cursor.execute("INSERT INTO Matches(date, firstTeamId, secondTeamId, duration) values (?, ?, ?, ?)", date_string_sql,teamIds[0],teamIds[1],match['duration'] )
-                cursor.commit()
+                savefixture.save_match(match, cursor)
         except Exception as e:
             print('Error while saving fixtures', e)
 
@@ -83,17 +93,22 @@ class readjson:
 class FixtureList:
     matches = []
 
-def generate_match(teams, i, holidayList, Event, gameType):
-    duration = 0
-    if (gameType == 2 or gameType == 3):
-        duration = 30
-    else:
-        duration = 180
-    return {
-        "date": fixturedate.generateDate(Event, holidayList),
-        "teams": [teams[i]["name"], teams[i + 1]["name"]],
-        "duration": duration
-    }
+class match:
+    def generate_match(teams, i, holidayList, Event, gameType):
+        try:
+            duration = 0
+            if (gameType == 2 or gameType == 3):
+                duration = 30
+            else:
+                duration = 180
+            return {
+                "date": fixturedate.generateDate(Event, holidayList),
+                "teams": [teams[i]["name"], teams[i + 1]["name"]],
+                "duration": duration
+            }
+        except Exception as e:
+            print('Error while generating matches', e)
+
 class createfixtures:
     def create_fixtures(teamList, holidayList, Event):
         try:
@@ -102,10 +117,10 @@ class createfixtures:
                 return "Cannot create fixtures with odd number of teams"
 
             gameType = teams[0]['gameType']
-            matches = [generate_match(teams, i, holidayList, Event, gameType) for i in range(0, len(teams), 2)]
+            matches = [match.generate_match(teams, i, holidayList, Event, gameType) for i in range(0, len(teams), 2)]
 
             FixtureList.matches = matches
-            # savefixture.saveFixtures(FixtureList.matches)
+            savefixture.save_fixtures(FixtureList.matches, cursor)
 
             output_data = {
                 "gameId": gameType,
