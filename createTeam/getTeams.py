@@ -1,8 +1,6 @@
-import pyodbc
+from databaseConnection import database
 
-connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=ITT-SATVIK-MS;DATABASE=ISCdatabase;Trusted_Connection=yes;')
-cursor=connection.cursor()
-
+cursor = database.connect_to_database()
 class getteam:
     def getTeams(gameId):
         try:
