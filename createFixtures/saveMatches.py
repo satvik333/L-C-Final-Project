@@ -1,5 +1,8 @@
 from getTeamIds import teamids
 import datetime
+from databaseConnection import database
+
+cursor = database.connect_to_database()
 
 class savematch:
     def save_match(match, cursor):

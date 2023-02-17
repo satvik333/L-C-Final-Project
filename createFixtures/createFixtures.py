@@ -4,10 +4,9 @@ from generateMatches import match
 from FixtureList import FixtureList
 from readJsonFile import readjson
 from saveFixtures import savefixture
-import pyodbc
+from databaseConnection import database
 
-connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=ITT-SATVIK-MS;DATABASE=ISCdatabase;Trusted_Connection=yes;')
-cursor = connection.cursor()
+cursor = database.connect_to_database()
 class createfixtures:
     def create_fixtures(teamList, holidayList, Event):
         try:

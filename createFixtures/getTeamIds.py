@@ -1,8 +1,6 @@
-import pyodbc
+from databaseConnection import database
 
-connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=ITT-SATVIK-MS;DATABASE=ISCdatabase;Trusted_Connection=yes;')
-cursor = connection.cursor()
-
+cursor = database.connect_to_database()
 class teamids:
     def get_team_ids(teams, cursor):
             cursor.execute("SELECT * FROM Team WHERE Team.name IN ('{}')".format("', '".join(teams)))
