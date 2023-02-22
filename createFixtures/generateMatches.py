@@ -1,16 +1,16 @@
-from generateFixturesDate import fixturedate
+from generateFixturesDate import fixturedateandtime
 
 class match:
-    def generate_match(teams, i, holidayList, Event, gameType):
+    def generate_match(teams, index, inputFileData):
         try:
-            duration = 0
-            if (gameType == 2 or gameType == 3):
-                duration = 30
-            else:
-                duration = 180
+            holidayList = inputFileData["holidayList"]
+            Event = inputFileData["event"]
+            gameType = teams[0]['gameType']
+            duration_map = {2: 30, 3: 30}
+            duration = duration_map.get(gameType, 180)
             return {
-                "date": fixturedate.generateDate(Event, holidayList),
-                "teams": [teams[i]["name"], teams[i + 1]["name"]],
+                "date": fixturedateandtime.generateDateAndTime(Event, holidayList),
+                "teams": [teams[index]["name"], teams[index + 1]["name"]],
                 "duration": duration
             }
         except Exception as e:

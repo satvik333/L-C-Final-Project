@@ -1,4 +1,4 @@
-from checkForHalidays import holidayslist
+from checkForHolidays import holidayslist
 import datetime
 import random
 
@@ -13,7 +13,6 @@ class scheduleddate:
 
             while holidayslist.isScheduledDateInHolidays(scheduledDate, holidays):
                 scheduledDate = (datetime.datetime.strptime(scheduledDate, '%d-%m-%Y') + datetime.timedelta(days=1)).strftime('%d-%m-%Y')
-
             return scheduledDate
         except Exception as e:
             print('Error while generating scheduled date', e)

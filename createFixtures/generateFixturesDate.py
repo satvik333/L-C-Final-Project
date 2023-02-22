@@ -3,10 +3,10 @@ import random
 from generateTime import generatetime
 from generateScheduledDate import scheduleddate
 
-class fixturedate:
-    def generateDate(Event, holidayist):
+class fixturedateandtime:
+    def generateDateAndTime(Event, holidayist):
         try:
-            holidays = [i['date'] for i in holidayist]
+            holidays = [holiday['date'] for holiday in holidayist]
             eventStartDate = datetime.datetime.strptime(Event["startDate"], '%d-%m-%Y').date()
             eventEndDate = datetime.datetime.strptime(Event["endDate"], '%d-%m-%Y').date()
             scheduledDate = scheduleddate.generateScheduledDate(eventStartDate, eventEndDate, holidays)
